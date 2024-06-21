@@ -159,10 +159,29 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Update the time every second
-            updateTime();
-            setInterval(updateTime, 1000);
+    // Update location every 15 minutes
+    setInterval(() => {
+        getLocation((location) => {
+            console.log('Location update:', location);  // Debug log
+            fetch('/update_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `location=${location}`,
+            })
+            .then(response => {
+                console.log('Location update response:', response);  // Debug log
+                if (!response.ok) {
+                    console.error('Location update failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating location:', error);
+            });
         });
+    }, 15 * 60 * 1000);  // 15 minutes in milliseconds
+});
     </script>
 </head>
 <body>
